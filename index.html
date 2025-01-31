@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBDI Test Sederhana</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: url('https://source.unsplash.com/1600x900/?office,workspace') no-repeat center center fixed; 
+            background-size: cover;
+            color: #333; 
+            text-align: center; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: auto; 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+        h2 {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .question { 
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f4f4f4;
+            border-radius: 8px;
+        }
+        button { 
+            margin-top: 10px; 
+            padding: 10px; 
+            cursor: pointer; 
+            background-color: #2c3e50; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+        }
+        button:hover {
+            background-color: #34495e;
+        }
+        .options label {
+            display: inline-block;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .result img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>HBDI Test Sederhana</h2>
+        <form id="hbdiForm">
+            <div id="questions"></div>
+            <button type="button" onclick="calculateScore()">Lihat Hasil</button>
+        </form>
+        <h3>Hasil:</h3>
+        <p id="result"></p>
+        <div id="resultImage" class="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            { text: "Saya menikmati bekerja dengan angka dan data.", quadrant: "A" },
+            { text: "Saya lebih suka mengambil keputusan berdasarkan fakta daripada intuisi.", quadrant: "A" },
+            { text: "Saya suka memecahkan masalah dengan logika dan analisis.", quadrant: "A" },
+            { text: "Saya tertarik dengan sains, matematika, atau teknologi.", quadrant: "A" },
+            { text: "Saya suka membuat rencana dan mengikuti jadwal dengan disiplin.", quadrant: "B" },
+            { text: "Saya memperhatikan detail dan cenderung teliti dalam pekerjaan saya.", quadrant: "B" },
+            { text: "Saya merasa nyaman dengan aturan dan prosedur yang jelas.", quadrant: "B" },
+            { text: "Saya lebih suka pekerjaan yang terorganisir daripada yang spontan.", quadrant: "B" },
+            { text: "Saya senang berinteraksi dengan orang lain dan membangun hubungan.", quadrant: "C" },
+            { text: "Saya lebih suka bekerja dalam tim daripada sendirian.", quadrant: "C" },
+            { text: "Saya memahami perasaan orang lain dengan mudah.", quadrant: "C" },
+            { text: "Saya menghargai komunikasi dan ekspresi emosi dalam pekerjaan.", quadrant: "C" },
+            { text: "Saya suka mencoba ide baru dan berpikir di luar kebiasaan.", quadrant: "D" },
+            { text: "Saya lebih suka melihat gambaran besar daripada terjebak dalam detail.", quadrant: "D" },
+            { text: "Saya menikmati seni, desain, atau bidang kreatif lainnya.", quadrant: "D" },
+            { text: "Saya senang berimajinasi dan mengembangkan konsep inovatif.", quadrant: "D" }
+        ];
+
+        const questionContainer = document.getElementById("questions");
+        questions.forEach((q, index) => {
+            const div = document.createElement("div");
+            div.classList.add("question");
+            div.innerHTML = `
+                <label style="display: block; margin-bottom: 5px;">${q.text}</label>
+                <div class="options">
+                    <label><input type="radio" name="q${index}" value="1" data-quadrant="${q.quadrant}"> 1</label>
+                    <label><input type="radio" name="q${index}" value="2" data-quadrant="${q.quadrant}"> 2</label>
+                    <label><input type="radio" name="q${index}" value="3" data-quadrant="${q.quadrant}" checked> 3</label>
+                    <label><input type="radio" name="q${index}" value="4" data-quadrant="${q.quadrant}"> 4</label>
+                    <label><input type="radio" name="q${index}" value="5" data-quadrant="${q.quadrant}"> 5</label>
+                </div>
+            `;
+            questionContainer.appendChild(div);
+        });
+
+        function calculateScore() {
+            let scores = { A: 0, B: 0, C: 0, D: 0 };
+            questions.forEach((q, index) => {
+                const value = parseInt(document.querySelector(`input[name="q${index}"]:checked`).value);
+                scores[q.quadrant] += value;
+            });
+            const dominant = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            let resultText = "Dominasi berpikir Anda adalah: ";
+            let resultImage = '';
+            switch (dominant) {
+                case "A": 
+                    resultText += "Analitis (Logis & Faktual)"; 
+                    resultImage = '<img src="https://source.unsplash.com/1600x900/?data,analysis" alt="Analitis">';
+                    break;
+                case "B": 
+                    resultText += "Terstruktur (Detail & Rencana)"; 
+                    resultImage = '<img src="https://source.unsplash.com/1600x900/?planning,organization" alt="Terstruktur">';
+                    break;
+                case "C": 
+                    resultText += "Interpersonal (Relasi & Emosi)"; 
+                    resultImage = '<img src="https://source.unsplash.com/1600x900/?teamwork,communication" alt="Interpersonal">';
+                    break;
+                case "D": 
+                    resultText += "Eksperimental (Kreatif & Inovatif)"; 
+                    resultImage = '<img src="https://source.unsplash.com/1600x900/?creativity,design" alt="Eksperimental">';
+                    break;
+            }
+            document.getElementById("result").textContent = resultText;
+            document.getElementById("resultImage").innerHTML = resultImage;
+        }
+    </script>
+</body>
+</html>
